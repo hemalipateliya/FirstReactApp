@@ -12,7 +12,7 @@ const SeriesListItem =({series})=>
 
 const SeriesList = (props) =>
 {
-	console.log(props.list);
+	
 	
 	return (
 

@@ -4,7 +4,9 @@ import SeriesList from '../../Compenents/SeriesList';
 class Series extends Component{
 	state = {
 
-    series: []
+    series: [],
+    seriesName:'',
+    isFetching:false
   }
 
  
@@ -14,10 +16,10 @@ class Series extends Component{
 onSeriesInputChange=e=>
 {
 
-
+			this.setState({seriesName:e.target.value,isFetching:true});
 		 fetch(`http://api.tvmaze.com/search/shows?q=${e.target.value}`)
     .then(response=> response.json())
-    .then(json=> this.setState({series:json}))
+    .then(json=> this.setState({series:json,isFetching:false}));
   
 		console.log(e);
 		console.log(e.target.value)
@@ -26,14 +28,39 @@ onSeriesInputChange=e=>
 
 		render()
 	{
+		const{series,seriesName,isFetching}=this.state;//////////////////////
 		return( 
 			
 
 
-			<div> The length of the array {this.state.series.length}
+			<div> 
 				<div>
-				<input type="text" onChange={this.onSeriesInputChange}/>
+				<input 
+				value={seriesName}
+				type="text" onChange={this.onSeriesInputChange}/>
 				</div>
+				{
+					!isFetching && series.length===0 && seriesName.trim()===''
+					&&
+					<p> Please enter series name</p>
+
+				}
+				{
+
+					!isFetching && series.length===0 && seriesName.trim()!==''
+					&&
+					<p> No Tv series have been found ..</p>
+
+				}
+				{
+
+					isFetching && <p>loading........</p>
+				}
+				{
+
+					!isFetching && <SeriesList list={this.state.series} />
+
+				}
 				<SeriesList list={this.state.series}/>
 
 				</div>
